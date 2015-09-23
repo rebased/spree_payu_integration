@@ -10,10 +10,6 @@ class PayuOrder
       }
     end
 
-    description = I18n.t('order_description',
-      name: Spree::Store.current.name)
-    description = I18n.transliterate(description)
-
     {
       merchant_pos_id: OpenPayU::Configuration.merchant_pos_id,
       customer_ip: ip,
@@ -40,4 +36,11 @@ class PayuOrder
       products: products
     }
   end
+
+  def self.description
+    description = I18n.t('order_description', name: Spree::Store.current.name)
+    I18n.transliterate(description)
+  end
+
+  private_class_method :description
 end

@@ -1,20 +1,28 @@
 # Run Coverage report
-require 'simplecov'
-SimpleCov.start do
-  add_filter 'spec/dummy'
-  add_filter 'spec'
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Mailers', 'app/mailers'
-  add_group 'Models', 'app/models'
-  add_group 'Views', 'app/views'
-  add_group 'Libraries', 'lib'
+if ENV["COVERAGE"]
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter 'spec/dummy'
+    add_filter 'spec'
+    add_group 'Controllers', 'app/controllers'
+    add_group 'Helpers', 'app/helpers'
+    add_group 'Mailers', 'app/mailers'
+    add_group 'Models', 'app/models'
+    add_group 'Views', 'app/views'
+    add_group 'Libraries', 'lib'
+  end
 end
 
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path('../dummy/config/environment.rb',  __FILE__)
+begin
+  require File.expand_path("../dummy/config/environment", __FILE__)
+rescue LoadError
+  puts "Could not load dummy application. Please ensure you have run `bundle exec rake test_app`"
+  exit
+end
+
 
 require 'rspec/rails'
 require 'database_cleaner'

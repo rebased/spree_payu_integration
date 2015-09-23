@@ -1,6 +1,6 @@
 module Spree
   class PayuController < Spree::BaseController
-    protect_from_forgery except: [:notify, :continue]
+    protect_from_forgery except: :notify
 
     def notify
       response = OpenPayU::Order.retrieve(params[:order][:orderId])

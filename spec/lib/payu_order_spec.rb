@@ -7,10 +7,10 @@ RSpec.describe PayuOrder, type: :lib do
     let(:notify_url) { "http://localhost:5252/order_url/notify/1234" }
     let(:continue_url) { "http://localhost:5252/order_url/checkout/continue" }
 
-    let(:current_store) { FactoryGirl.create(:store, name: "Mój Spree Sklep") }
+    let(:current_store) { FactoryGirl.create(:store, name: "My shop") }
 
     before do
-      I18n.locale = :pl
+      I18n.locale = :en
       allow(OpenPayU::Configuration).to receive(:merchant_pos_id).and_return("145228")
       allow(Spree::Store).to receive(:current).and_return(current_store)
     end
@@ -22,15 +22,16 @@ RSpec.describe PayuOrder, type: :lib do
         merchant_pos_id: "145228",
         customer_ip: "128.0.0.1",
         ext_order_id: 1,
-        description: "Zamowienie z Moj Spree Sklep",
+        description: "Order from My shop",
         currency_code: "USD",
-        total_amount: 2000,
+        total_amount: (order.total*100).to_i,
         order_url: "http://localhost:5252/order_url/1234",
         notify_url: "http://localhost:5252/order_url/notify/1234",
         continue_url: "http://localhost:5252/order_url/checkout/continue",
+
         buyer: {
           email: "spree@example.com",
-          phone: "555-555-0199",
+          phone: order.bill_address.phone,
           first_name: "John",
           last_name: "Doe",
           language: "PL",
@@ -44,7 +45,7 @@ RSpec.describe PayuOrder, type: :lib do
         products: [
           {
             name: order.line_items.first.product.name,
-            unit_price: 1000,
+            unit_price: (order.line_items.first.price*100).to_i,
             quantity: 1
           }
         ]

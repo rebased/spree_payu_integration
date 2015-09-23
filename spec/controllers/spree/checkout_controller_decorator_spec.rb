@@ -1,16 +1,27 @@
 require 'spec_helper'
 
+spree_gem_version = Gem::Version.new(Spree.version)
+
 RSpec.describe Spree::CheckoutController, type: :controller do
   # copied from original checkout controller spec
   let(:token) { 'some_token' }
   let(:user) { FactoryGirl.create(:user) }
-  let(:order) { OrderWalkthrough.up_to(:delivery) }
+  let(:order) do
+    # the following if statement was created as a workaround for this commit
+    # https://github.com/spree/spree/commit/a301559bc3d0baf139cc2b5b8475935e15843ed1
+    if spree_gem_version > Gem::Version.new('3.0.2')
+      OrderWalkthrough.up_to(:payment)
+    else
+      OrderWalkthrough.up_to(:delivery)
+    end
+  end
 
   before do
     allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return("128.0.0.1")
     allow(controller).to receive(:try_spree_current_user).and_return(user)
     allow(controller).to receive(:spree_current_user).and_return(user)
     allow(controller).to receive(:current_order).and_return(order)
+    allow(PayuOrder).to receive(:description).and_return('description')
   end
 
   describe "PATCH /checkout/update/payment" do
@@ -42,33 +53,33 @@ RSpec.describe Spree::CheckoutController, type: :controller do
               merchantPosId: "145278",
               customerIp: "128.0.0.1",
               extOrderId: order.id,
-              description: "Order from Spree Test Store",
+              description: 'description',
               currencyCode: "USD",
-              totalAmount: 2000,
+              totalAmount: (order.total*100).to_i,
               orderUrl: "http://test.host/orders/#{order.number}",
               notifyUrl: "http://test.host/payu/notify",
               continueUrl: "http://test.host/orders/#{order.number}",
               buyer: {
                 email: user.email,
-                phone: "555-555-0199",
-                firstName: "John",
-                lastName: "Doe",
-                language: "PL",
+                phone: order.bill_address.phone,
+                firstName: order.bill_address.firstname,
+                lastName: order.bill_address.lastname,
+                language: 'PL',
                 delivery: {
-                  street: "10 Lovely Street",
-                  postalCode: "35005",
-                  city: "Herndon",
-                  countryCode: "US"
+                    street: order.shipping_address.address1,
+                    postalCode: order.shipping_address.zipcode,
+                    city: order.shipping_address.city,
+                    countryCode: order.bill_address.country.iso
                 }
               },
               products: {
                 products: [
-                  { name: order.line_items.first.product.name, unitPrice: 1000, quantity: 1 }
+                  { name: order.line_items.first.product.name, unitPrice: (order.line_items.first.price*100).to_i, quantity: 1 }
                 ]
               },
               reqId: "{36332498-294f-41a1-980c-7b2ec0e3a8a4}"
             },
-            headers: { 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' }
+            headers: { 'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' }
           )
           .to_return(
             status: 200,
