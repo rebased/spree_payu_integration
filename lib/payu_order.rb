@@ -2,14 +2,6 @@ class PayuOrder
   include Rails.application.routes.url_helpers
 
   def self.params(order, ip, order_url, notify_url, continue_url)
-    products = order.line_items.map do |li|
-      {
-        name: li.product.name,
-        unit_price: (li.price * 100).to_i,
-        quantity: li.quantity
-      }
-    end
-
     {
       merchant_pos_id: OpenPayU::Configuration.merchant_pos_id,
       customer_ip: ip,
@@ -30,17 +22,50 @@ class PayuOrder
           street: order.shipping_address.address1,
           postal_code: order.shipping_address.zipcode,
           city: order.shipping_address.city,
-          country_code: order.bill_address.country.iso
+          country_code: order.bill_address.country.iso,
+          recipient_name: "#{order.shipping_address.first_name} #{order.shipping_address.last_name}"
         }
       },
-      products: products
+      products: items(order)
     }
   end
 
-  def self.description
-    description = I18n.t('order_description', name: Spree::Store.current.name)
-    I18n.transliterate(description)
-  end
+  class << self
+    private
 
-  private_class_method :description
+    def items(order)
+      products(order) + shipping(order) + adjustments(order)
+    end
+
+    def products(order)
+      order.line_items.map do |li|
+        {
+          name: li.product.name,
+          unit_price: (li.price * 100).to_i,
+          quantity: li.quantity
+        }
+      end
+    end
+
+    def adjustments(order)
+      [].tap do |result|
+        result << {name: 'RABAT', unit_price: (order.adjustment_total*100).to_i, quantity: 1} if order.adjustment_total != 0
+      end
+    end
+
+    def shipping(order)
+      [
+        {
+          quantity: 1,
+          unit_price: (order.shipment_total* 100).to_i,
+          name: order.shipments.first.shipping_method.name
+        }
+      ]
+    end
+
+    def description
+      description = I18n.t('order_description', name: Spree::Store.current.name)
+      I18n.transliterate(description)
+    end
+  end
 end

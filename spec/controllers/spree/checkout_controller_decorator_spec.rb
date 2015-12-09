@@ -69,12 +69,14 @@ RSpec.describe Spree::CheckoutController, type: :controller do
                     street: order.shipping_address.address1,
                     postalCode: order.shipping_address.zipcode,
                     city: order.shipping_address.city,
-                    countryCode: order.bill_address.country.iso
+                    countryCode: order.bill_address.country.iso,
+                    recipientName: order.shipping_address.first_name + " " + order.shipping_address.last_name
                 }
               },
               products: {
                 products: [
-                  { name: order.line_items.first.product.name, unitPrice: (order.line_items.first.price*100).to_i, quantity: 1 }
+                  { name: order.line_items.first.product.name, unitPrice: (order.line_items.first.price*100).to_i, quantity: 1 },
+                  { name: 'UPS Ground', unitPrice: 1000, quantity: 1 }
                 ]
               },
               reqId: "{36332498-294f-41a1-980c-7b2ec0e3a8a4}"

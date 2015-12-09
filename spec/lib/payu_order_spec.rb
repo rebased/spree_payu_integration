@@ -28,7 +28,6 @@ RSpec.describe PayuOrder, type: :lib do
         order_url: "http://localhost:5252/order_url/1234",
         notify_url: "http://localhost:5252/order_url/notify/1234",
         continue_url: "http://localhost:5252/order_url/checkout/continue",
-
         buyer: {
           email: "spree@example.com",
           phone: order.bill_address.phone,
@@ -39,7 +38,8 @@ RSpec.describe PayuOrder, type: :lib do
             street: "10 Lovely Street",
             postal_code: "35005",
             city: "Herndon",
-            country_code: "US"
+            country_code: "US",
+            recipient_name: "John Doe"
           }
         },
         products: [
@@ -47,7 +47,8 @@ RSpec.describe PayuOrder, type: :lib do
             name: order.line_items.first.product.name,
             unit_price: (order.line_items.first.price*100).to_i,
             quantity: 1
-          }
+          },
+          {:quantity=>1, :unit_price=>1000, :name=>"UPS Ground"}
         ]
       )
 
