@@ -111,7 +111,7 @@ RSpec.describe Spree::PayuController, type: :controller do
           payment_last_change_at = payment.updated_at
           subject
           expect(payment.reload).to be_completed
-          expect(payment.updated_at).to eq(payment_last_change_at)
+          expect(payment.updated_at).to be_within(1.second).of(payment_last_change_at)
         end
       end
     end
@@ -129,7 +129,7 @@ RSpec.describe Spree::PayuController, type: :controller do
           payment_last_change_at = payment.updated_at
           subject
           expect(payment.reload).to be_failed
-          expect(payment.updated_at).to eq(payment_last_change_at)
+          expect(payment.updated_at).to be_within(1.second).of(payment_last_change_at)
         end
       end
     end
