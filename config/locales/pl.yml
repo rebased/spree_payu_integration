@@ -1,2 +1,10 @@
 pl:
   order_description: "Zamówienie z %{name}"
+  spree:
+    merchant_pos_id: 'POS ID sprzedawcy'
+    signature_key: 'Klucz'
+    algorithm: 'Algorytm'
+    service_domain: 'Domena'
+    protocol: 'Protokół'
+    env: 'Środowisko'
+    payu_gateway_description: 'Bramka PayU'

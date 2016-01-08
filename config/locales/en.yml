@@ -1,2 +1,10 @@
 en:
   order_description: "Order from %{name}"
+  spree:
+    merchant_pos_id: 'Merchant POS ID'
+    signature_key: 'Signature key'
+    algorithm: 'Algorithm'
+    service_domain: 'Service domain'
+    protocol: 'Protocol'
+    env: 'Environment'
+    payu_gateway_description: 'PayU Gateway'
