@@ -1,2 +1,4 @@
 pl:
   order_description: "Zamówienie z %{name}"
+  spree:
+    pay_with_payu: Zapłać z PayU
