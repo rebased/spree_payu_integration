@@ -73,8 +73,10 @@ module Spree
     end
 
     def payu_error(e = nil)
-      current_order.errors[:base] << "PayU error #{e.try(:message)}"
-      render :edit
+      error = ["PayU error", e.try(:message)].compact.join(' ');
+      flash[:error] = error
+
+      redirect_to checkout_state_path(current_order.state)
     end
   end
 end

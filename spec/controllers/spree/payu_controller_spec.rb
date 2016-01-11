@@ -276,13 +276,14 @@ RSpec.describe Spree::PayuController, type: :controller do
         context "when PayU order creation returns unexpected status" do
           let(:payu_order_create_status) { "FAIL" }
 
-          it "logs error in order" do
-            subject
-            expect(assigns(:order).errors[:base]).to include("PayU error ")
+          it "redirects back to payment step with a flash error message" do
+            expect(subject).to redirect_to "http://test.host/checkout/payment"
           end
 
-          it "renders :edit page" do
-            expect(subject).to render_template(:edit)
+          it "sets flash error" do
+            subject
+
+            expect(flash[:error]).to eq "PayU error"
           end
         end
 
