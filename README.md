@@ -1,7 +1,15 @@
-SpreePayuIntegration
-====================
+SpreePayuIntegration - maintained fork
+======================================
 
 Spree integration with OpenPayU payment service.
+
+This is a maintained fork of `netguru/spree_payu_integration`.
+
+Changes:
+
+* updated to work with Spree 3
+* Requests to PayU are done in separate controller, not in before filter
+
 
 Installation
 ------------
@@ -9,7 +17,7 @@ Installation
 Add spree_payu_integration to your Gemfile:
 
 ```ruby
-gem 'spree_payu_integration', github: 'netguru/spree_payu_integration'
+gem 'spree_payu_integration', github: 'rebased/spree_payu_integration'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -42,4 +50,4 @@ Simply add this require statement to your spec_helper:
 require 'spree_payu_integration/factories'
 ```
 
-Copyright  2014 © [Netguru](https://netguru.co), released under the New BSD License
+Copyright  2014 © [rebased](https://rebased.pl), released under the New BSD License

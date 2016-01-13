@@ -2,14 +2,14 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_payu_integration'
-  s.version     = '3.0.2'
+  s.version     = '3.1.0'
   s.summary     = 'Spree integration with PayU.'
   s.description = 'Spree integration with PayU.'
   s.required_ruby_version = '>= 1.9.3'
 
-  s.author    = 'Sebastian Sito'
-  s.email     = 'hi@netguru.co'
-  s.homepage  = 'https://github.com/netguru/spree_payu_integration'
+  s.author    = 'Sebastian Sito i inni'
+  s.email     = 'contact@rebased.pl'
+  s.homepage  = 'https://github.com/rebased/spree_payu_integration'
 
   s.require_path = 'lib'
   s.requirements << 'none'
