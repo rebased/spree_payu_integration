@@ -3,13 +3,12 @@ SpreePayuIntegration - maintained fork
 
 Spree integration with OpenPayU payment service.
 
-This is a maintained fork of `netguru/spree_payu_integration`.
+This is a maintained fork of [netguru/spree_payu_integration](https://github.com/netguru/spree_payu_integration).
 
 Changes:
 
-* updated to work with Spree 3
+* Updated to work with Spree 3
 * Requests to PayU are done in separate controller, not in before filter
-
 
 Installation
 ------------
@@ -50,4 +49,6 @@ Simply add this require statement to your spec_helper:
 require 'spree_payu_integration/factories'
 ```
 
-Copyright  2014 © [rebased](https://rebased.pl), released under the New BSD License
+Original authors: [netguru](https://netguru.co), released under the New BSD License.
+
+This fork maintained by [rebased](https://rebased.pl).
