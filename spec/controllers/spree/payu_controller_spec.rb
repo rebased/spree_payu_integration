@@ -159,16 +159,16 @@ RSpec.describe Spree::PayuController, type: :controller do
     end
 
     describe "GET /payu/pay" do
+      before do
+        # we need to fake it because it's returned back with order
+        allow(SecureRandom).to receive(:uuid).and_return("36332498-294f-41a1-980c-7b2ec0e3a8a4")
+        allow(OpenPayU::Configuration).to receive(:merchant_pos_id).and_return("145278")
+        allow(OpenPayU::Configuration).to receive(:signature_key).and_return("S3CRET_KEY")
+      end
+
+      subject { spree_post :pay, payment_method_id: payment_method.id }
+
       context "when payment_method is Payu" do
-        subject { spree_get :pay, payment_method_id: payment_method.id }
-
-        before do
-          # we need to fake it because it's returned back with order
-          allow(SecureRandom).to receive(:uuid).and_return("36332498-294f-41a1-980c-7b2ec0e3a8a4")
-          allow(OpenPayU::Configuration).to receive(:merchant_pos_id).and_return("145278")
-          allow(OpenPayU::Configuration).to receive(:signature_key).and_return("S3CRET_KEY")
-        end
-
         let(:payment_method) { FactoryGirl.create :payu_payment_method }
 
         let(:payu_order_create_status) { "SUCCESS" }
@@ -299,6 +299,25 @@ RSpec.describe Spree::PayuController, type: :controller do
 
               expect(flash[:error]).to eq "PayU error #{error_message}"
             end
+          end
+        end
+      end
+
+      context "when payment method is not PayU" do
+        let(:payment_method) { FactoryGirl.create :check_payment_method }
+
+        it 'raises ActiveRecord::RecordNotFound' do
+          expect {
+            subject
+          }.to raise_error ActiveRecord::RecordNotFound
+        end
+
+        it 'does not call api' do
+          expect(OpenPayU::Order).not_to receive(:create)
+
+          begin
+            subject
+          rescue ActiveRecord::RecordNotFound
           end
         end
       end

@@ -2,6 +2,8 @@ module Spree
   class PayuController < Spree::StoreController
     protect_from_forgery except: :notify
 
+    before_filter :load_payment_method, only: :pay
+
     # explicit list is requred because all OpenPayU errors
     # are defined in global module and inherit from StandardError
     [
@@ -52,11 +54,13 @@ module Spree
 
     private
 
-    def payment_success
-      payment_method = Spree::PaymentMethod.find(params[:payment_method_id])
+    def load_payment_method
+      @payment_method = Spree::PaymentMethod::Payu.find(params[:payment_method_id])
+    end
 
+    def payment_success
       payment = current_order.payments.build(
-        payment_method_id: payment_method.id,
+        payment_method_id: @payment_method.id,
         amount: current_order.total,
         state: 'checkout'
       )
