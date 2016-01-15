@@ -1,6 +1,9 @@
 SpreePayuIntegration - maintained fork
 ======================================
 
+[![Circle CI](https://circleci.com/gh/rebased/spree_payu_integration.svg?style=svg)](https://circleci.com/gh/rebased/spree_payu_integration)
+
+
 Spree integration with OpenPayU payment service.
 
 This is a maintained fork of [netguru/spree_payu_integration](https://github.com/netguru/spree_payu_integration).
