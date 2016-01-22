@@ -1,14 +1,7 @@
-/* Placeholder for backend dummy app */
 (function($) {
-  SpreePayuIntegration = {
-    updateSaveAndContinueVisibility: function(e) {
-      if (this.isPayuChoosen(e)) {
-        console.log('yes');
-        this.hideSaveAndContinue();
-      } else {
-        console.log('no');
-        this.showSaveAndContinue();
-      }
+  var SpreePayuIntegration = {
+    updatePayuSelectedClass: function(e) {
+      $('#checkout_form_payment').toggleClass('payu_selected', this.isPayuChoosen(e));
     },
 
     isPayuChoosen: function(e) {
@@ -25,21 +18,13 @@
 
     payuPaymentMethodId: function() {
       return $('#payu_button').data('payment-method-id');
-    },
-
-    hideSaveAndContinue: function() {
-      $('[data-hook="buttons"] button').hide();
-    },
-
-    showSaveAndContinue: function() {
-      $('[data-hook="buttons"] button').show();
     }
   }
 
   $(document).ready(function() {
-    SpreePayuIntegration.updateSaveAndContinueVisibility();
+    SpreePayuIntegration.updatePayuSelectedClass();
 
-    var onPaymentMethodChange = SpreePayuIntegration.updateSaveAndContinueVisibility.bind(SpreePayuIntegration);
-    $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(onPaymentMethodChange);
+    var onPaymentMethodRadioClick = SpreePayuIntegration.updatePayuSelectedClass.bind(SpreePayuIntegration);
+    $('div[data-hook="checkout_payment_step"] input[type="radio"]').change(onPaymentMethodRadioClick);
   })
 })(jQuery);

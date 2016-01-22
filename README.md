@@ -34,6 +34,18 @@ Configuration
 
 Don't forget to insert seller account details into `config/initializers/openpayu.rb`
 
+Pay with Payu button
+--------------------
+
+`spree_payu_integration` adds a `payu_selected` css class to `form#checkout_form_payment`
+when PayU payment is selected, and removes this class if some other payment
+is choosen. To use this functionality, just add `//= require spree/frontend/spree_payu_integration` to your `application.js`.
+
+This is so developer can conditionally hide "Save and Continue" button with css,
+so "Pay with PayU" button can be positioned in exact same spot than "Save and Continue".
+
+**REMEMBER: This is your job to write CSSes that hides "Save and Continue" button.**
+
 Testing
 -------
 
