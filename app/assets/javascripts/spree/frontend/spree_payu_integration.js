@@ -13,7 +13,8 @@
         return $(e.target).val();
       }
 
-      return $('[name="order[payments_attributes][][payment_method_id]').val();
+      var name = 'order[payments_attributes][][payment_method_id]';
+      return $('[name="' + name + '"]').val();
     },
 
     payuPaymentMethodId: function() {
