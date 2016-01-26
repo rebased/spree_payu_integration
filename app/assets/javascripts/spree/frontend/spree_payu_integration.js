@@ -20,12 +20,13 @@
     payuPaymentMethodId: function() {
       return $('#payu_button').data('payment-method-id');
     }
-  }
+  };
 
   $(document).ready(function() {
     SpreePayuIntegration.updatePayuSelectedClass();
 
-    var onPaymentMethodRadioClick = SpreePayuIntegration.updatePayuSelectedClass.bind(SpreePayuIntegration);
-    $('div[data-hook="checkout_payment_step"] input[type="radio"]').change(onPaymentMethodRadioClick);
-  })
+    $('div[data-hook="checkout_payment_step"] input[type="radio"]').change(function(e) {
+      SpreePayuIntegration.updatePayuSelectedClass(e);
+    });
+  });
 })(jQuery);
