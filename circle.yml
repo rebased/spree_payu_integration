@@ -1,0 +1,4 @@
+---
+dependencies:
+  post:
+    - bundle exec rake test_app
