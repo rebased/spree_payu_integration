@@ -5,7 +5,7 @@
     },
 
     isPayuChoosen: function(e) {
-      return this.choosenPaymentMethodId(e) === this.payuPaymentMethodId();
+      return parseInt(this.choosenPaymentMethodId(e), 10) === parseInt(this.payuPaymentMethodId(), 10);
     },
 
     choosenPaymentMethodId: function(e) {
