@@ -70,6 +70,11 @@ module Spree
         redirect_to checkout_state_path(current_order.state) and return
       end
 
+      unless current_order.next
+        flash[:error] = Spree.t('cannot_advance_order_state')
+        redirect_to checkout_state_path(current_order.state) and return
+      end
+
       payment.pend!
     end
 

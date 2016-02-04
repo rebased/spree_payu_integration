@@ -2,3 +2,4 @@ en:
   order_description: "Order from %{name}"
   spree:
     pay_with_payu: Pay with PayU
+    cannot_advance_order_state: 'Cannot advance order state'
