@@ -238,6 +238,19 @@ RSpec.describe Spree::PayuController, type: :controller do
             expect(subject).to redirect_to("http://payu.com/redirect/url/4321")
           end
 
+          it 'advances order to next state' do
+            expect(order).to receive(:next).and_return(true)
+
+            subject
+          end
+
+          it 'redirects to payment page if advancing of order failed' do
+            allow(order).to receive(:next).and_return(false)
+
+            expect(subject).to redirect_to checkout_state_path(state: 'payment')
+            expect(flash[:error]).to include Spree.t('cannot_advance_order_state')
+          end
+
           context "when payment save failed" do
             before do
               allow_any_instance_of(Spree::Payment).to receive(:save).and_return(false)
