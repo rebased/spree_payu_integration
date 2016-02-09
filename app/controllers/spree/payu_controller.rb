@@ -2,7 +2,8 @@ module Spree
   class PayuController < Spree::StoreController
     protect_from_forgery except: :notify
 
-    before_filter :load_payment_method, only: :pay
+    before_action :validate_current_order, only: :pay
+    before_action :load_payment_method, only: :pay
 
     # explicit list is requred because all OpenPayU errors
     # are defined in global module and inherit from StandardError
@@ -37,10 +38,6 @@ module Spree
     end
 
     def pay
-      if current_order.blank? || current_order.state != 'payment'
-        raise ActiveRecord::RecordNotFound
-      end
-
       params = PayuOrder.params(current_order, request.remote_ip, order_url(current_order), payu_notify_url, order_url(current_order))
       response = OpenPayU::Order.create(params)
 
@@ -53,6 +50,16 @@ module Spree
     end
 
     private
+
+    def validate_current_order
+      if current_order.blank?
+        raise ActiveRecord::RecordNotFound, 'Order not found'
+      end
+
+      if current_order.state != 'payment'
+        raise RuntimeError, 'Order not in payment state'
+      end
+    end
 
     def load_payment_method
       @payment_method = Spree::PaymentMethod::Payu.find(params[:payment_method_id])

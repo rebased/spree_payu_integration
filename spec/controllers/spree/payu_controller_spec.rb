@@ -316,6 +316,34 @@ RSpec.describe Spree::PayuController, type: :controller do
         end
       end
 
+      context "when there is no current order" do
+        before do
+          allow(controller).to receive(:current_order).and_return(nil)
+        end
+
+        subject { spree_post :pay, payment_method_id: '23' }
+
+        it 'raises ActiveRecord::RecordNotFound with meaningful message' do
+          expect {
+            subject
+          }.to raise_error ActiveRecord::RecordNotFound, /order not found/i
+        end
+      end
+
+      context "when order is not in payment state" do
+        before do
+          allow(order).to receive(:state).and_return(:completed)
+        end
+
+        subject { spree_post :pay, payment_method_id: '23' }
+
+        it 'raises RuntimeError with meaningful message' do
+          expect {
+            subject
+          }.to raise_error RuntimeError, /order not in payment state/i
+        end
+      end
+
       context "when payment method is not PayU" do
         let(:payment_method) { FactoryGirl.create :check_payment_method }
 

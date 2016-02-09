@@ -12,6 +12,8 @@ Changes:
 
 * Updated to work with Spree 3
 * Requests to PayU are done in separate controller, not in before filter
+* Added JS to toggle `payu_selected` class on form, so original
+  submit can be hidden with CSS
 
 Installation
 ------------
@@ -37,6 +39,8 @@ Don't forget to insert seller account details into `config/initializers/openpayu
 Pay with Payu button
 --------------------
 
+### Hiding original submit button
+
 `spree_payu_integration` adds a `payu_selected` css class to `form#checkout_form_payment`
 when PayU payment is selected, and removes this class if some other payment
 is choosen. To use this functionality, just add `//= require spree/frontend/spree_payu_integration` to your `application.js`.
@@ -45,6 +49,15 @@ This is so developer can conditionally hide "Save and Continue" button with css,
 so "Pay with PayU" button can be positioned in exact same spot than "Save and Continue".
 
 **REMEMBER: This is your job to write CSSes that hides "Save and Continue" button.**
+
+### Preventing double-clicking Payu button
+
+Please ensure you have some JavaScript in place that will prevent double-clicking
+PayU button. This can lead to lost carts, because first request
+will advance order to `completed` state, and the second one will raise
+an error, because you can only make payments for orders in `payment` state.
+
+**REMEMBER: This is your job to write JSes that prevents double clicking the button.**
 
 Testing
 -------
